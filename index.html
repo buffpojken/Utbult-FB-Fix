@@ -1,0 +1,64 @@
+<html> 
+   <head> 
+     <title>FB</title> 
+   </head> 
+   <body> 
+
+
+		<p id="log">
+			
+		</p>	
+
+		<form>
+			this is just a form, do your regular magic here...
+		</form>
+
+		<img src="http://www.animationsource.org/sites_content/talespin/img_site/facebook-connect.png" onclick="doMagicUnicornStuff()"/>
+
+     <div id="fb-root"></div> 
+     <script> 
+       window.fbAsyncInit = function() { 
+         FB.init({ 
+           appId      : '257586307610243', 
+           status     : true,  
+           cookie     : true, 
+           xfbml      : true 
+         }); 
+       }; 
+       (function(d){ 
+          var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;} 
+          js = d.createElement('script'); js.id = id; js.async = true; 
+          js.src = "//connect.facebook.net/en_US/all.js"; 
+          d.getElementsByTagName('head')[0].appendChild(js); 
+        }(document)); 
+
+				function doMagicUnicornStuff(){
+					FB.login(function(response){
+						// response innehåller nu lite olika saker, men det vi är intresserade av 
+						// authResponse/session . Namnet varierar beroende på vilken version av app du har
+						// men du vill använda authResponse (så om du inte får den gå in i facebook.com/developers, välj
+						// settings och aktivera oauth under advanced). 
+						// Finns den har användaren loggat in och gett permissions, annars inte!
+						// response.authResponse / response.session innehåller också all data vi vill ha
+						var p = document.getElementById('log');
+						for(a in response.session){
+							// Du är intresserad av uid, access_token och sig. 
+							// access_token är din oauth-token för vidare API-anrop, uid är användar-id på FB. 
+							// Dessa kan du nu antingen posta upp själv - och sedan kolla on post om användaren redan finns, 
+							// eftersom du är garanterad från FB att uid är samma. 
+							// sig validerar du datan med om du känner dig paranoid genom följande algoritm i pseudokod: 
+							// MD5.hexdigest(session.map { |k, v| "#{k}=#{v}" } .sort.join + FACEBOOK_APP_SECRET)
+							p.innerHTML = p.innerHTML + "<br />"+a+":"+response.session[a];
+						}
+												
+					},{
+						// Lägg till dina permissions du behöver här - du hittar listan på http://developers.facebook.com/docs/reference/api/permissions/
+						scope: 'email'
+					})
+					
+					
+				}
+
+     </script> 
+   </body> 
+</html>
